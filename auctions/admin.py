@@ -7,4 +7,5 @@ admin.site.register(comment)
 admin.site.register(bids)
 admin.site.register(listing)
 admin.site.register(category)
+
 # Register your models here.

@@ -16,13 +16,27 @@
             <input autofocus class="form-control" type="url" name="url" placeholder="http/image">
         </div>
         <div class="form-group">
-            <select name="categroys">
-                {% for categroy in categroys %}
-                    <option value="{{ categroy.id }}">{{ categroy }}</option>
-                {% empty %}
-                    <input autofocus class="form-control" type="text" name="category" placeholder="decoration"> 
-                {% endfor %}
+            <select name="categroy" id="">
+                {% for categroy in categorys %}
+                    <option value="{{categroy.id}}">{{ categroy}}</option>
+                {% endfor %}>
+            </select>  
+               <!----- 
             </select>
+               
+                 
+                <option value="">Choose a Category</option>
+                <option value="fashion">Fashion</option>
+                <option value="tools">Tools</option>
+                <option value="toys">Toys</option>
+                <option value="electronics">Electronics</option>
+                <option value="accessories">Accessories</option>
+                <option value="books">Books</option>
+               
+            <input autofocus class="form-control" type="text" name="category" placeholder="Title">
+               
+               -->
+            
                  
         </div>
         <input class="btn btn-primary" type="submit" value="Publish">

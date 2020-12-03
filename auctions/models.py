@@ -5,21 +5,24 @@ from django.db import models
 
 
 class category(models.Model):
-    category_name = models.CharField(max_length=64,default=None)
+    categoryname = models.CharField(max_length=64)
     def __str__(self):
-        return f" {self.category_name} "
+        return f" {self.categoryname} "
 
 class listing(models.Model):
-    title = models.CharField(max_length=64,default=None)
-    description = models.CharField(max_length=64 ,default=None)
-    bid = models.IntegerField(default=None)
-    url = models.CharField(max_length=64 ,default=None)
-    category = models.ManyToManyField(category, blank=True, related_name="Category")
+    title = models.CharField(max_length=64)
+    description = models.CharField(max_length=64 )
+    bid = models.IntegerField()
+    url = models.CharField(max_length=64 )
+    categorys = models.ForeignKey(category, on_delete=models.CASCADE, related_name="category")
     def __str__(self):
-        return f" {self.title} {self.description} ({self.bid})"
+        return f" {self.title} {self.description} ({self.bid}) "
+
+
+
 
 class bids(models.Model):
-    bid = models.IntegerField(default=None)
+    bid = models.IntegerField()
 
 class comment(models.Model):
     pass
