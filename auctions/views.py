@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User , comment , bids , listing 
+from .models import User , comment , bids , listing , category
 
 
 def index(request):
@@ -75,6 +75,7 @@ def creat_listing(request):
         items.save()
         return HttpResponseRedirect(reverse("index"))
     return render(request,"auctions/create_listing.html",{
+        "categroys":category.objects.all()
         })
 
 """
