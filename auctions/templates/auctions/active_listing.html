@@ -1,9 +1,9 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listings</h2>
+    <h2>Active Listings</h2>
 
-    TODO
+    
 
     {% for list in listing %}
         <div>
@@ -12,7 +12,6 @@
             <img width="300px" high="300px" src="{{list.url}}">
             <h3>Category :{{list.categorys}} </h3>
             <li>Start Bid :{{list.bid}} </li>
-            <li>status :{{list.status}} </li>
             
         </div>
     {% empty %}

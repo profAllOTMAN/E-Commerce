@@ -8,7 +8,7 @@ from .models import User , comment , bids , listing , category
 
 
 def index(request):
-    items= listing.objects.all()
+    items= listing.objects.filter(status="active")
     return render(request, "auctions/index.html",{
         "listing":items,
         
@@ -76,13 +76,28 @@ def creat_listing(request):
         items.bid = request.POST["bid"]
         items.url = request.POST["url"]
         items.categorys= categorry
+        items.status="active"
         items.save()
         return HttpResponseRedirect(reverse("index"))
     return render(request,"auctions/create_listing.html",{
         "categorys":category.objects.all()
         })
 
+
+
 """
+listOfactiv = [] 
+def active_listing(request):
+    allListings = listing.objects.all()
+    for ele in allListings:
+        if ele.status == "active":
+            listOfactiv.append(ele)
+        elif:
+            listOfactiv.remove(ele)
+    return render(request,"auctions/active_listing.html",{
+        "listingactive": listOfactiv
+    })
+
 categorys= category.objects.get(pk=int(request.POST["categroy"]))
         listing(request,title,description,bid,url,categor)
         listing.save()
