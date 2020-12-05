@@ -83,7 +83,7 @@ def creat_listing(request):
         "categorys":category.objects.all()
         })
 
-
+def page_listing(request,listing_id):
 
 """
 listOfactiv = [] 
