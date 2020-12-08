@@ -10,9 +10,7 @@ from .models import User , comment , bids , listing , category
 def index(request):
     items= listing.objects.filter(status="active")
     return render(request, "auctions/index.html",{
-        "listing":items,
-        
-       
+        "listing":items
     })
 
 
@@ -84,6 +82,11 @@ def creat_listing(request):
         })
 
 def page_listing(request,listing_id):
+    Listing =listing.objects.get(pk=listing_id)
+    return render(request,"auctions/page_listing.html",{
+        "listing":Listing,
+    })
+    
 
 """
 listOfactiv = [] 

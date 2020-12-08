@@ -2,7 +2,15 @@
 
 {% block body %}
     <h2>Listings page</h2>
-
+    <div>
+        <h2>Title :  {{listing.title}}</h2> 
+        <p>Description : {{listing.description}} </p>
+        <img width="300px" high="300px" src="{{listing.url}}">
+        <h3>Category :{{listing.categorys}} </h3>
+        <li>Start Bid :{{listing.bid}} </li>
+        <li>status :{{listing.status}} </li>
+        
+    </div>
     
 
     
