@@ -9,7 +9,27 @@
         <h3>Category :{{listing.categorys}} </h3>
         <li>Start Bid :{{listing.bid}} </li>
         <li>status :{{listing.status}} </li>
-        
+
+            {% for ele in list_watch %}
+
+                {% if ele.title == listing.title  %}
+                    <form action="{% url 'page_listing' listing.id %}" method="post">
+                        {% csrf_token %} 
+                        <input class="btn btn-primary" name="q" type="submit" value="add">
+                    </form>
+                {% else %}
+                    <form action="{% url 'page_listing' listing.id %}" method="post">
+                        {% csrf_token %} 
+                        <input class="btn btn-primary" name="q" type="submit" value="remove">
+                    </form>
+                {% endif %}
+                
+            {% empty %}
+                <form action="{% url 'page_listing' listing.id %}" method="post">
+                    {% csrf_token %} 
+                    <input class="btn btn-primary" name="q" type="submit" value="add">
+                </form>
+        {% endfor %}
     </div>
     
 
