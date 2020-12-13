@@ -13,15 +13,19 @@
             {% for ele in list_watch %}
 
                 {% if ele.title == listing.title  %}
-                    <form action="{% url 'page_listing' listing.id %}" method="post">
-                        {% csrf_token %} 
-                        <input class="btn btn-primary" name="q" type="submit" value="add">
-                    </form>
-                {% else %}
+                    
                     <form action="{% url 'page_listing' listing.id %}" method="post">
                         {% csrf_token %} 
                         <input class="btn btn-primary" name="q" type="submit" value="remove">
                     </form>
+                    
+                {% else %}
+
+                    <form action="{% url 'page_listing' listing.id %}" method="post">
+                        {% csrf_token %} 
+                        <input class="btn btn-primary" name="q" type="submit" value="add">
+                    </form>
+                    
                 {% endif %}
                 
             {% empty %}

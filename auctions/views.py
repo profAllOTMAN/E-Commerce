@@ -80,27 +80,35 @@ def creat_listing(request):
     return render(request,"auctions/create_listing.html",{
         "categorys":category.objects.all()
         })
+
 list_watch = []
+
+def watchlist(request):
+    if "list_watch" not in request.session:
+        request.session["list_watch"] = []
+    return render(request,"auctions/watchlist.html",{
+
+        "listingwatch":request.session["list_watch"]
+    })
+
 def page_listing(request,listing_id):
     Listing =listing.objects.get(pk=listing_id)
     if request.method == "POST":
         q =  request.POST["q"]
         if q == "add":
-            list_watch.append(listing)
+            request.session["list_watch"] += Listing
             return HttpResponseRedirect(reverse("watchlist"))
         elif q == "remove":
-            list_watch.remove(listing)
+            request.session["list_watch"] += Listing
             return HttpResponseRedirect(reverse("index")) 
+            
     return render(request,"auctions/page_listing.html",{
         "listing":Listing,
-        "list_watch":list_watch
+        "list_watch":request.session["list_watch"]
     })
 
 
-def watchlist(request):
-    return render(request,"auctions/watchlist.html",{
-        "listingwatch":list_watch
-    })
+
 
     
 
