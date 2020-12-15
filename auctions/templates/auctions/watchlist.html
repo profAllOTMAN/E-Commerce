@@ -2,12 +2,14 @@
 
 {% block body %}
     <h2>watch list  page</h2>
-
+    <h5>
+        user id : {{user}}
+    </h5>
     {% for listing in listingwatch %}
 
        
             <div>
-                <h2>Title :  {{listing.title}}</h2> 
+                <h2>Title :  {{listing}}</h2> 
                 <p>Description : {{listing.description}} </p>
                 <img width="300px" high="300px" src="{{listing.url}}">
                 <h3>Category :{{listing.categorys}} </h3>

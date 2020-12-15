@@ -86,8 +86,9 @@ list_watch = []
 def watchlist(request):
     if "list_watch" not in request.session:
         request.session["list_watch"] = []
+    
     return render(request,"auctions/watchlist.html",{
-
+        "user": User.username,
         "listingwatch":request.session["list_watch"]
     })
 
@@ -96,12 +97,11 @@ def page_listing(request,listing_id):
     if request.method == "POST":
         q =  request.POST["q"]
         if q == "add":
-            request.session["list_watch"] += Listing
+            request.session["list_watch"] += [Listing.id]
             return HttpResponseRedirect(reverse("watchlist"))
         elif q == "remove":
-            request.session["list_watch"] += Listing
-            return HttpResponseRedirect(reverse("index")) 
-            
+            request.session["list_watch"] -= [Listing.id]
+            return HttpResponseRedirect(reverse("index"))      
     return render(request,"auctions/page_listing.html",{
         "listing":Listing,
         "list_watch":request.session["list_watch"]
