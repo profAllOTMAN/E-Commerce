@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User , comment , bids , listing , category
+from .models import User , comment , bids , listing , category ,  watchlist
 
 
 def index(request):
@@ -81,38 +81,83 @@ def creat_listing(request):
         "categorys":category.objects.all()
         })
 
-list_watch = []
 
-def watchlist(request):
-    if "list_watch" not in request.session:
-        request.session["list_watch"] = []
+
+def watchlist_page(request):
+
+    name_user = User.objects.get(username=request.user.get_username())
     
+    all_listings = watchlist.objects.get(user_name=name_user)
     return render(request,"auctions/watchlist.html",{
-        "user": User.username,
-        "listingwatch":request.session["list_watch"]
+        "list_watch": all_listings.listings.all()
     })
-
+    
 def page_listing(request,listing_id):
     Listing =listing.objects.get(pk=listing_id)
-    if request.method == "POST":
-        q =  request.POST["q"]
-        if q == "add":
-            request.session["list_watch"] += [Listing.id]
-            return HttpResponseRedirect(reverse("watchlist"))
-        elif q == "remove":
-            request.session["list_watch"] -= [Listing.id]
-            return HttpResponseRedirect(reverse("index"))      
+    name_user = User.objects.get(username=request.user.get_username())
+    try:
+        watchlist.objects.get(user_name=name_user)
+        watchlist_name = watchlist.objects.get(user_name=name_user)
+        if request.method == "POST":
+
+            q =  request.POST["q"]
+            if q == "add":
+                watchlist_name.listings.add(Listing)
+                return HttpResponseRedirect(reverse("watchlist"))
+            elif q == "remove":
+                watchlist_name.listings.remove(Listing)
+                return HttpResponseRedirect(reverse("index"))
+        return render(request,"auctions/page_listing.html",{
+            "listing":Listing,
+            "list_watch": watchlist_name.listings.all()
+        })
+    except watchlist.DoesNotExist:
+        watchlist.objects.create(user_name=name_user)
+        watchlist_name = watchlist.objects.get(user_name=name_user)
+        return render(request,"auctions/page_listing.html",{
+            "listing":Listing,
+            "list_watch": watchlist_name.listings.all()
+        })
+
+    watchlist_name = watchlist.objects.get(user_name=name_user)
+
     return render(request,"auctions/page_listing.html",{
-        "listing":Listing,
-        "list_watch":request.session["list_watch"]
-    })
+            "listing":Listing,
+            "list_watch": watchlist_name.listings.all()
+        })
 
 
+def add_watchlist (request):
+    Listing =listing.objects.get(pk=listing_id)
+    name_user = User.objects.get(username=request.user.get_username())
+
+    
 
 
     
 
 """
+    try: 
+        watchlist_name = watchlist.objects.get(user_name=name_user)
+        return watchlist_name
+    except watchlist_name.DoesNotExist:
+        watchlist.objects.create(user_name=name_user)
+        watchlist_name = watchlist.objects.get(user_name=name_user)
+        return watchlist_name
+
+ name_user = User.objects.get(username=request.user.get_username())
+    watchlist_name = watchlist.objects.filter(user_name=name_user)
+
+    if request.method == "POST":
+        
+        q =  request.POST["q"]
+        if q == "add":
+            watchlist_name.listings.add(Listing)
+            return HttpResponseRedirect(reverse("watchlist"))
+        elif q == "remove":
+            watchlist_name.listings.remove(Listing)
+            return HttpResponseRedirect(reverse("index")) 
+
 if q == "add":
             list_watch.append(Listing)
             return render(request,"auctions/watchlist.html",{

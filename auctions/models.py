@@ -31,3 +31,9 @@ class comment(models.Model):
 
 class User(AbstractUser):
     pass
+
+class watchlist(models.Model):
+    user_name = models.CharField(max_length=64)
+    listings = models.ManyToManyField(listing,blank=True ,related_name= "listing_add")
+    def __str__(self):
+        return f" {self.user_name} {self.listings} "

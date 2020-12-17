@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listings page</h2>
+    <h2>Listings page {{userr.id}} </h2>
     <div>
         <h2>Title :  {{listing.title}}</h2> 
         <p>Description : {{listing.description}} </p>
@@ -23,7 +23,7 @@
 
                     <form action="{% url 'page_listing' listing.id %}" method="post">
                         {% csrf_token %} 
-                        <input class="btn btn-primary" name="q" type="submit" value="add">
+                        <input class="btn btn-primary" name="q" type="submit" value="addd">
                     </form>
                     
                 {% endif %}
