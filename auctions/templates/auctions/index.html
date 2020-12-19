@@ -7,7 +7,14 @@
 
     {% for list in listing %}
         <div>
-            <h2>Title :  {{list.title}}</h2> <a href="{% url 'page_listing' list.id %}">listing </a>
+            <h2>Title :  {{list.title}}</h2> 
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'page_listing' list.id %}">listing </a>
+                {% else %}
+                    <a href="{% url 'register'  %}">listing </a>
+                {% endif %}
+            </div>
             <p>Description : {{list.description}} </p>
             <img width="300px" high="300px" src="{{list.url}}">
             <h3>Category :{{list.categorys}} </h3>

@@ -84,13 +84,19 @@ def creat_listing(request):
 
 
 def watchlist_page(request):
-
-    name_user = User.objects.get(username=request.user.get_username())
-    
-    all_listings = watchlist.objects.get(user_name=name_user)
-    return render(request,"auctions/watchlist.html",{
-        "list_watch": all_listings.listings.all()
-    })
+    try:
+        name_user = User.objects.get(username=request.user.get_username())
+        all_listings = watchlist.objects.get(user_name=name_user)
+        return render(request,"auctions/watchlist.html",{
+            "list_watch": all_listings.listings.all()
+        })
+    except:
+        watchlist.objects.create(user_name=name_user)
+        watchlist_name = watchlist.objects.get(user_name=name_user)
+        all_listings = watchlist.objects.get(user_name=name_user)
+        return render(request,"auctions/watchlist.html",{
+            "list_watch": all_listings.listings.all()
+        })
     
 def page_listing(request,listing_id):
     Listing =listing.objects.get(pk=listing_id)
@@ -109,27 +115,15 @@ def page_listing(request,listing_id):
                 return HttpResponseRedirect(reverse("index"))
         return render(request,"auctions/page_listing.html",{
             "listing":Listing,
-            "list_watch": watchlist_name.listings.all()
-        })
+            "list_watch": watchlist_name.listings.filter(title=Listing.title)
+            })
     except watchlist.DoesNotExist:
         watchlist.objects.create(user_name=name_user)
         watchlist_name = watchlist.objects.get(user_name=name_user)
-        return render(request,"auctions/page_listing.html",{
-            "listing":Listing,
-            "list_watch": watchlist_name.listings.all()
-        })
+        return HttpResponseRedirect(reverse("index"))
 
-    watchlist_name = watchlist.objects.get(user_name=name_user)
-
-    return render(request,"auctions/page_listing.html",{
-            "listing":Listing,
-            "list_watch": watchlist_name.listings.all()
-        })
-
-
-def add_watchlist (request):
-    Listing =listing.objects.get(pk=listing_id)
-    name_user = User.objects.get(username=request.user.get_username())
+    
+    
 
     
 
@@ -137,6 +131,13 @@ def add_watchlist (request):
     
 
 """
+watchlist_name = watchlist.objects.get(user_name=name_user)
+
+    return render(request,"auctions/page_listing.html",{
+            "listing":Listing,
+            "list_watch": watchlist_name.listings.all()
+        })
+
     try: 
         watchlist_name = watchlist.objects.get(user_name=name_user)
         return watchlist_name

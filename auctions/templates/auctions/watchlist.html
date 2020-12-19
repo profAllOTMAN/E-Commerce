@@ -9,7 +9,7 @@
 
        
             <div>
-                <h2>Title :  {{listing.title}}</h2> 
+                <p> <h2>Title :  {{listing.title}}</h2>  <a href="{% url 'page_listing' listing.id %}">listing </a></p>
                 <p>Description : {{listing.description}} </p>
                 <img width="300px" high="300px" src="{{listing.url}}">
                 <h3>Category :{{listing.categorys}} </h3>
@@ -17,7 +17,8 @@
                 <li>status :{{listing.status}} </li>
                 
             </div>
-        
+    {% empty %}
+       <p> You did't add yet any element to your watchlist check listing page  <a class="nav-link" href="{% url 'index' %}"> Listings</a></p>
     {% endfor %}
 
     
