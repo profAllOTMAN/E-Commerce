@@ -1,15 +1,33 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listings page {{userr.id}} </h2>
+    <h2>Listings page {{userr.id}}  </h2>
     <div>
         <h2>Title :  {{listing.title}}</h2> 
-        <p>Description : {{listing.description}} </p>
         <img width="300px" high="300px" src="{{listing.url}}">
-        <h3>Category :{{listing.categorys}} </h3>
         <li>Start Bid :{{listing.bid}} </li>
+        <div>
+            {% if user.is_authenticated %}
+                {% if eror %}
+                 
+                  <div class="alert alert-warning" role="alert">
+                    moste be greater then  {{listing.bid}} try again 
+                  </div>
+                {% endif %}
+                <form action="{% url 'page_listing' listing.id %}" method="post">
+                    {% csrf_token %} 
+                    <input  name="bid" type="number" >
+                    <input class="btn btn-primary"  type="submit" value="bid" >
+                </form>
+            {% else %}
+                <input class="btn btn-primary" name="bid" type="number" >
+                <a href="{% url 'register'  %}" ><input class="btn btn-primary"  type="submit" ></a>
+            {% endif %}
+        </div>
+        <p>Description : {{listing.description}} </p>
+        <h3>Category :{{listing.categorys}} </h3>
         <li>status :{{listing.status}} </li>
-
+       
             {% for ele in list_watch %}
 
                 {% if ele.title == listing.title  %}

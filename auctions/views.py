@@ -83,6 +83,7 @@ def creat_listing(request):
 
 
 
+
 def watchlist_page(request):
     try:
         name_user = User.objects.get(username=request.user.get_username())
@@ -92,7 +93,6 @@ def watchlist_page(request):
         })
     except:
         watchlist.objects.create(user_name=name_user)
-        watchlist_name = watchlist.objects.get(user_name=name_user)
         all_listings = watchlist.objects.get(user_name=name_user)
         return render(request,"auctions/watchlist.html",{
             "list_watch": all_listings.listings.all()
@@ -101,11 +101,33 @@ def watchlist_page(request):
 def page_listing(request,listing_id):
     Listing =listing.objects.get(pk=listing_id)
     name_user = User.objects.get(username=request.user.get_username())
+    start_bid = Listing
+    bidds=bids()
+    """
+    add watchlist 
+
+    """
     try:
         watchlist.objects.get(user_name=name_user)
         watchlist_name = watchlist.objects.get(user_name=name_user)
+        
         if request.method == "POST":
-
+            bides = int(request.POST["bid"])
+            if bides > start_bid.bid :
+                start_bid.bid = bides
+                bidds.user_name= name_user
+                bidds.bid = bides
+                bidds.listings =Listing
+                start_bid.save()
+                bidds.save()
+                return HttpResponseRedirect(reverse("watchlist"))
+            else:
+                bidds.bid = start_bid.bid
+                error = True
+                return render(request,"auctions/page_listing.html",{
+                    "listing":Listing,
+                    "eror":error,
+                    })
             q =  request.POST["q"]
             if q == "add":
                 watchlist_name.listings.add(Listing)
@@ -125,12 +147,35 @@ def page_listing(request,listing_id):
     
     
 
-    
-
 
     
 
 """
+def bided(request,listing_id):
+    Listing =listing.objects.get(pk=listing_id)
+    name_user = User.objects.get(username=request.user.get_username())
+    start_bid = Listing
+    bidds=bids()
+    if request.method == "POST":
+        bides = int(request.POST["bid"])
+        if bides > start_bid.bid :
+            start_bid.bid = bides
+            bidds.user_name= name_user
+            bidds.bid = bides
+            bidds.listings =Listing
+            start_bid.save()
+            bidds.save()
+            return HttpResponseRedirect(reverse("watchlist"))
+        else:
+            bidds.bid = start_bid.bid
+            return render(request,"auctions/page_listing.html",{
+                "error":"try agin bide greater then "
+                })
+    return render(request,"auctions/page_bid.html",{
+        "listing":Listing,
+        })
+                        
+
 watchlist_name = watchlist.objects.get(user_name=name_user)
 
     return render(request,"auctions/page_listing.html",{

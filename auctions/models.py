@@ -21,19 +21,24 @@ class listing(models.Model):
         return f" {self.title} {self.description} ({self.bid}) {self.status} "
 
 
+class User(AbstractUser):
+    pass
+
 
 
 class bids(models.Model):
     bid = models.IntegerField()
+    user_name = models.CharField(max_length=64)
+    listings = models.ForeignKey(listing,on_delete=models.CASCADE,related_name= "listing_bided" )
 
 class comment(models.Model):
     pass
 
-class User(AbstractUser):
-    pass
+
 
 class watchlist(models.Model):
     user_name = models.CharField(max_length=64)
     listings = models.ManyToManyField(listing,blank=True ,related_name= "listing_add")
     def __str__(self):
         return f" {self.user_name} {self.listings} "
+
