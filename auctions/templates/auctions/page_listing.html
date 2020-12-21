@@ -17,10 +17,10 @@
                 <form action="{% url 'page_listing' listing.id %}" method="post">
                     {% csrf_token %} 
                     <input  name="bid" type="number" >
-                    <input class="btn btn-primary"  type="submit" value="bid" >
+                    <input class="btn btn-primary" name="q" type="submit" value="bid" >
                 </form>
             {% else %}
-                <input class="btn btn-primary" name="bid" type="number" >
+                <input class="btn btn-primary"  type="number" >
                 <a href="{% url 'register'  %}" ><input class="btn btn-primary"  type="submit" ></a>
             {% endif %}
         </div>

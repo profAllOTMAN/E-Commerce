@@ -75,6 +75,8 @@ def creat_listing(request):
         items.url = request.POST["url"]
         items.categorys= categorry
         items.status="active"
+        #creator of this listing
+        items.author = request.user.get_username()
         items.save()
         return HttpResponseRedirect(reverse("index"))
     return render(request,"auctions/create_listing.html",{
@@ -103,31 +105,31 @@ def page_listing(request,listing_id):
     name_user = User.objects.get(username=request.user.get_username())
     start_bid = Listing
     bidds=bids()
-    """
-    add watchlist 
-
-    """
+   # if this watchlist exist
     try:
         watchlist.objects.get(user_name=name_user)
         watchlist_name = watchlist.objects.get(user_name=name_user)
-        
+        # recieving data ba a q;  queryset 
         if request.method == "POST":
-            bides = int(request.POST["bid"])
-            if bides > start_bid.bid :
-                start_bid.bid = bides
-                bidds.user_name= name_user
-                bidds.bid = bides
-                bidds.listings =Listing
-                start_bid.save()
-                bidds.save()
-                return HttpResponseRedirect(reverse("watchlist"))
-            else:
-                bidds.bid = start_bid.bid
-                error = True
-                return render(request,"auctions/page_listing.html",{
-                    "listing":Listing,
-                    "eror":error,
-                    })
+            if request.POST["q"] == "bid" :
+                bides = int(request.POST["bid"])
+                if bides > start_bid.bid :
+                    start_bid.bid = bides
+                    bidds.user_name= name_user
+                    bidds.bid = bides
+                    bidds.listings =Listing
+                    start_bid.save()
+                    bidds.save()
+                    return render(request,"auctions/page_listing.html",{
+                        "listing":Listing,
+                        })
+                else:
+                    bidds.bid = start_bid.bid
+                    error = True
+                    return render(request,"auctions/page_listing.html",{
+                        "listing":Listing,
+                        "eror":error,
+                        })
             q =  request.POST["q"]
             if q == "add":
                 watchlist_name.listings.add(Listing)
