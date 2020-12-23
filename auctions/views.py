@@ -105,12 +105,27 @@ def page_listing(request,listing_id):
     name_user = User.objects.get(username=request.user.get_username())
     start_bid = Listing
     bidds=bids()
+    bidoflisting = bids.objects.get(pk=listing_id)
    # if this watchlist exist
     try:
-        watchlist.objects.get(user_name=name_user)
+        # for closed the listing 
+        
+
+        # get exactly watchlist related to this user 
         watchlist_name = watchlist.objects.get(user_name=name_user)
         # recieving data ba a q;  queryset 
         if request.method == "POST":
+
+            if request.POST["q"] == "closed":
+                
+                user_win = bidoflisting.user_name
+                Listing.status="no_active"
+                Listing.save()
+                return render(request,"auctions/page_listing.html",{
+                    "listing":Listing,
+                    "user_win":user_win
+                    })
+            # user bided conditions 
             if request.POST["q"] == "bid" :
                 bides = int(request.POST["bid"])
                 if bides > start_bid.bid :
@@ -139,8 +154,11 @@ def page_listing(request,listing_id):
                 return HttpResponseRedirect(reverse("index"))
         return render(request,"auctions/page_listing.html",{
             "listing":Listing,
-            "list_watch": watchlist_name.listings.filter(title=Listing.title)
+            "list_watch": watchlist_name.listings.filter(title=Listing.title),
+            "user_won":bidoflisting.user_name
             })
+            
+        
     except watchlist.DoesNotExist:
         watchlist.objects.create(user_name=name_user)
         watchlist_name = watchlist.objects.get(user_name=name_user)

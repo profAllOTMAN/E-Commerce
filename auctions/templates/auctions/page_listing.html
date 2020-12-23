@@ -1,13 +1,43 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listings page {{userr.id}}  </h2>
+   <div class="container">
+    <div class="listing">
+    <div class="detail">
+    <h2>Listings page {{userr.id}} {{user.username}} and author:  {{listing.author}} </h2>
+    {% if listing.author ==  user.username and listing.status == active %}
+        <form action="{% url 'page_listing' listing.id %}" method="post">
+            {% csrf_token %} 
+            <div class="alert alert-warning" role="alert">
+                <input class="btn btn-primary" name="q" type="submit" value="closed">
+            </div>
+        </form>
+        
+    {% endif %}
+
     <div>
-        <h2>Title :  {{listing.title}}</h2> 
+        <h2>Title :  {{listing.title}}</h2>
+        <p> {{user_win}} and {{user.username}} </p>
+        {% if listing.status != active %}
+            {% if user_won == user.username or user_win == user.username %}
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">congatulations {{user_win}}!</h4>
+                    <p>Aww yeah, you successfully win this auctions .</p>
+                    <hr>
+                    <p class="mb-0">we will contacting  you soon, we will send to you an email!</p>
+                </div>
+            {% endif %}
+        {% endif %}
         <img width="300px" high="300px" src="{{listing.url}}">
+        <p>Description : {{listing.description}} </p>
+        <p>Category :<span class="badge bg-info text-dark">{{listing.categorys}}</span></p>
+        <li>status :{{listing.status}}  </li>
         <li>Start Bid :{{listing.bid}} </li>
         <div>
+        {% if listing.status == active %}
+
             {% if user.is_authenticated %}
+
                 {% if eror %}
                  
                   <div class="alert alert-warning" role="alert">
@@ -24,9 +54,7 @@
                 <a href="{% url 'register'  %}" ><input class="btn btn-primary"  type="submit" ></a>
             {% endif %}
         </div>
-        <p>Description : {{listing.description}} </p>
-        <h3>Category :{{listing.categorys}} </h3>
-        <li>status :{{listing.status}} </li>
+
        
             {% for ele in list_watch %}
 
@@ -51,9 +79,18 @@
                     {% csrf_token %} 
                     <input class="btn btn-primary" name="q" type="submit" value="add">
                 </form>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            {% if user.username != user_won %}
+                <p> this listing has been closed by the author and onther person how win this with {{listing.bid}}  </p>
+            {% endif %}
+        {% endif %}
     </div>
-    
-
+    </div>
+    <div class="comment">
+                <p>comment </p>
+    </div>
+    </div>
+  </div> 
     
 {% endblock %}
